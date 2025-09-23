@@ -40,3 +40,24 @@
   transform: translateY(-6px);
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
 }
+
+/* Responsive scaling for h1 and hr */
+@media(max-width: 1280px) {
+    .relatedProducts h1 { font-size: 42px; }
+    .relatedProducts hr { width: 160px; height: 5px; }
+}
+
+@media(max-width: 1080px) {
+    .relatedProducts h1 { font-size: 36px; }
+    .relatedProducts hr { width: 140px; height: 5px; }
+}
+
+@media(max-width: 800px) {
+    .relatedProducts h1 { font-size: 30px; }
+    .relatedProducts hr { width: 120px; height: 4px; }
+}
+
+@media(max-width: 500px) {
+    .relatedProducts h1 { font-size: 24px; }
+    .relatedProducts hr { width: 100px; height: 3px; }
+}

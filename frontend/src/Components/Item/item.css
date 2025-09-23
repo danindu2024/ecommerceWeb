@@ -1,11 +1,11 @@
 .item {
-    flex: 0 1 280px;
+    flex: 1 1 220px; /* flexible base size */
     max-width: 280px;
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: #fff5f5; /* soft peach background for youth vibe */
+    background: #fff5f5;
     padding: 15px;
     border-radius: 15px;
     box-shadow: 0 8px 25px rgba(255, 77, 109, 0.1);
@@ -19,7 +19,7 @@
 }
 
 .item img {
-    width: 100%;
+    width: 100%;        /* auto-fit inside container */
     height: auto;
     object-fit: cover;
     border-radius: 12px;
@@ -29,26 +29,50 @@
 .item p {
     margin: 6px 0;
     font-weight: 600;
-    font-size: 18px;
+    font-size: 1rem;
     color: #222222;
 }
 
 .item-prices {
     display: flex;
-    gap: 15px;
+    gap: 12px;
     margin-top: 8px;
     align-items: center;
 }
 
 .item-price-new {
-    color: #ff4d6d; /* coral accent for new price */
-    font-size: 18px;
+    color: #ff4d6d;
+    font-size: 1rem;
     font-weight: 700;
 }
 
 .item-price-old {
-    color: #888888;
-    font-size: 16px;
+    color: #888;
+    font-size: 0.9rem;
     font-weight: 500;
     text-decoration: line-through;
+}
+
+/* --- Responsive tweaks --- */
+@media(max-width:1280px){
+    .item { max-width: 240px; }
+    .item p, .item-price-new, .item-price-old { font-size: 0.95rem; }
+}
+
+@media(max-width:1020px){
+    .item { max-width: 200px; }
+    .item p { font-size: 0.9rem; }
+    .item-price-old { font-size: 0.85rem; }
+}
+
+@media(max-width:800px){
+    .item { max-width: 160px; }
+    .item p { font-size: 0.85rem; }
+    .item-price-old { font-size: 0.8rem; }
+}
+
+@media(max-width:500px){
+    .item { max-width: 140px; }
+    .item p { font-size: 0.8rem; }
+    .item-price-old { font-size: 0.75rem; }
 }

@@ -50,3 +50,27 @@
 .descriptionBox-description p {
   margin: 0;
 }
+
+@media(max-width:800px){
+  .descriptionBox {
+  margin: 75px 100px;
+}
+  .descriptionBox-nav-box{
+    font-size: 14px;
+  }
+  .descriptionBox-description p{
+    font-size: 13px;
+  }
+}
+
+@media(max-width:500px){
+  .descriptionBox {
+  margin: 50px 60px;
+}
+  .descriptionBox-nav-box{
+    font-size: 13px;
+  }
+  .descriptionBox-description p{
+    font-size: 12px;
+  }
+}
