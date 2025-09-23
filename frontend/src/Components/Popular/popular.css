@@ -1,31 +1,32 @@
-.popular{
+.popular {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
-    height: 90hv;
+    gap: 15px;
     margin-top: 50px;
+    padding: 0 20px;
 }
 
-.popular h1{
-    font-size: 50px;
-    font-weight: 600;
-    color: #272727;
+.popular h1 {
+    font-size: 48px;
+    font-weight: 700;
+    color: #222222; /* dark for readability */
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
-.popular hr{
-    width: 200px;
+.popular hr {
+    width: 180px;
     height: 6px;
     border-radius: 10px;
-    background: hsl(0, 0%, 22%);
+    background: #ff4d6d; /* coral for consistency */
+    border: none;
 }
 
 .popular-items {
     display: flex;
-    flex-wrap: wrap;   /* ✅ allows items to move to the next row */
-    justify-content: center; /* ✅ keeps them centered with margins */
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 30px;
-    margin-top: 50px;
-    padding: 0 20px;  /* ✅ left/right margin for the whole container */
-    box-sizing: border-box;
+    margin-top: 40px;
 }

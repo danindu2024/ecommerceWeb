@@ -1,58 +1,103 @@
 .offers {
-    width: 65%;
-    height: 60vh;
+    width: 70%;
+    min-height: 60vh;
     display: flex;
-    margin: auto;
-    margin-bottom: 50px;
-    background: linear-gradient(180deg, hsl(0, 85%, 95%) 0%, rgba(0, 0, 0, 0.603) 60%);
-    padding: 40px;   /* smaller padding keeps content inside */
-    box-sizing: border-box; /* ensures padding stays inside container */
-    border-radius: 20px; /* optional: makes it look cleaner */
-    margin-top: 100px; /* space from top */
+    margin: 100px auto 50px auto;
+    background: linear-gradient(135deg, #fff0f0 0%, rgba(0, 0, 0, 0.1) 60%);
+    padding: 50px;
+    box-sizing: border-box;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    overflow: hidden;
+    position: relative;
 }
 
-.offers-left{
+/* subtle overlay effect */
+.offers::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top left, rgba(255,255,255,0.4), transparent 70%);
+    pointer-events: none;
+}
+
+.offers-left {
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    z-index: 1;
 }
 
-.offers-left h1{
-    color: rgb(37, 37, 37);
-    font-size: 60px;
-    font-weight: 600;
+.offers-left h1 {
+    color: #252525;
+    font-size: 52px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -1px;
 }
 
-.offers-left p{
-    color: rgb(37, 37, 37);
-    font-size: 22px;
-    font-weight: 600;
+.offers-left p {
+    color: #444;
+    font-size: 20px;
+    font-weight: 500;
+    margin-top: 10px;
 }
 
-.offers-left button{
-    width: 282px;
-    height: 70px;
+.offers-left button {
+    width: 260px;
+    height: 65px;
     border-radius: 35px;
-    background: hsl(0, 63%, 53%);
+    background: #ff4d6d; /* coral button to match youthful theme */
     border: none;
     color: white;
-    font-size: 22px;
-    font-weight: 500;
+    font-size: 20px;
+    font-weight: 600;
     margin-top: 30px;
     cursor: pointer;
+    box-shadow: 0 6px 20px rgba(255, 77, 109, 0.4);
+    transition: all 0.3s ease;
+}
+
+.offers-left button:hover {
+    background: #e63956; /* darker coral on hover */
+    transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(255, 77, 109, 0.6);
 }
 
 .offers-right {
     flex: 1;
     display: flex;
-    align-items: center;
-    justify-content: center; /* keep it inside instead of pushing out */
-    padding-top: 0; /* remove extra push */
+    align-items: flex-end; /* align image to bottom */
+    justify-content: center;
+    z-index: 1;
 }
 
 .offers-right img {
-    max-width: 100%;
-    height: 405px;
+    max-width: 80%;  /* slightly smaller */
+    height: auto;
     object-fit: contain;
+    border-radius: 15px; /* optional: rounded edges */
+    box-shadow: 0 8px 25px rgba(255, 77, 109, 0.15); /* subtle shadow */
+    
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .offers {
+        flex-direction: column;
+        text-align: center;
+        padding: 40px 30px;
+    }
+    .offers-left h1 {
+        font-size: 40px;
+    }
+    .offers-left button {
+        margin: 25px auto 0 auto;
+    }
+    .offers-right img {
+        margin-top: 30px;
+        width: 70%;
+        align-self: center;
+    }
 }
