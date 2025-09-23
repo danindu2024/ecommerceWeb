@@ -25,7 +25,7 @@ const ProductDispaly = (props) => {
             <img src={star_icon} alt="" />
             <img src={star_icon} alt="" />
             <img src={star_icon} alt="" />
-            <img src={star_icon} alt="" />
+            <img src={star_dull_icon} alt="" />
             <p>(122)</p>
         </div>
         <div className="productDisplay-right-prices">
