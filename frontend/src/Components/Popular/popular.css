@@ -4,6 +4,7 @@
     align-items: center;
     gap: 10px;
     height: 90hv;
+    margin-top: 50px;
 }
 
 .popular h1{
@@ -19,8 +20,12 @@
     background: hsl(0, 0%, 22%);
 }
 
-.popular-items{
+.popular-items {
     display: flex;
+    flex-wrap: wrap;   /* ✅ allows items to move to the next row */
+    justify-content: center; /* ✅ keeps them centered with margins */
     gap: 30px;
     margin-top: 50px;
+    padding: 0 20px;  /* ✅ left/right margin for the whole container */
+    box-sizing: border-box;
 }
