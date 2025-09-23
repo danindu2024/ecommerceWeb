@@ -1,0 +1,42 @@
+.relatedProducts {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 80px 0;
+  background: #fafafa;
+  border-radius: 12px;
+}
+
+.relatedProducts h1 {
+  color: #222;
+  font-size: 38px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.relatedProducts hr {
+  width: 80px;
+  height: 4px;
+  border-radius: 10px;
+  background: #e63946; /* highlight color */
+  border: none;
+}
+
+.relatedProducts-item {
+  margin-top: 40px;
+  display: flex;
+  gap: 25px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Optional: Add hover animation to each item */
+.relatedProducts-item > * {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.relatedProducts-item > *:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+}
