@@ -1,18 +1,18 @@
 import React, { useState } from 'react'
 import './Navbar.css'
 
-import logo from '../Asserts/logo.png'
-import cart_logo from '../Asserts/cart_icon.png'
+import Logo from '../Asserts/logo.png'
+import Cart_logo from '../Asserts/cart_icon.png'
 import { Link } from 'react-router-dom'
 
 const Navbar = () => {
 
-    const [menu, setMenu] = useState("shop")
+  const [menu, setMenu] = useState("shop")
 
   return (
     <div className='navbar'>
       <div className="nav_logo">
-        <img src={logo} alt="logo" />
+        <img src={Logo} alt="logo" />
         <p>SHOPPER</p>
       </div>
       <ul className="nav-menu">
@@ -23,7 +23,7 @@ const Navbar = () => {
       </ul>
       <div className="nav-login-cart">
         <Link style={{textDecoration: 'none'}} to='/login'><button>Login</button></Link>
-        <Link style={{textDecoration: 'none'}} to='/cart'><img src={cart_logo} alt="cart_logo" /></Link>
+        <Link style={{textDecoration: 'none'}} to='/cart'><img src={Cart_logo} alt="cart_logo" /></Link>
         <div className="nav-cart-court">0</div>
       </div>
     </div>
