@@ -1,71 +1,136 @@
-.addProduct{
-    box-sizing: border-box;
+/* ===== Admin Panel Color Palette ===== */
+:root {
+  --primary: #4A90E2;      /* modern blue */
+  --secondary: #50E3C2;    /* teal green */
+  --bg-light: #F5F7FA;     /* light gray background */
+  --card-bg: #FFFFFF;      /* white */
+  --text-dark: #333333;    /* primary text */
+  --text-light: #666666;   /* secondary text */
+  --danger: #FF4D4F;       /* soft red */
+  --border: #E0E0E0;       /* subtle borders */
+}
+
+/* ===== Container ===== */
+.addProduct {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 800px;
+  padding: 30px 40px;
+  margin: 20px auto;
+  border-radius: 12px;
+  background: var(--card-bg);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  font-family: 'Poppins', sans-serif;
+}
+
+/* ===== Form Fields ===== */
+.addProduct-itemField {
+  width: 100%;
+  margin-bottom: 20px;
+  color: var(--text-dark);
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.addProduct-itemField p {
+  margin-bottom: 8px;
+  color: var(--text-light);
+}
+
+/* ===== Inputs ===== */
+.addProduct-itemField input {
+  width: 100%;
+  height: 50px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  padding: 0 12px;
+  outline: none;
+  color: var(--text-dark);
+  font-size: 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.addProduct-itemField input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.15);
+}
+
+/* ===== Price Fields (Flexbox) ===== */
+.addProduct-price {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* ===== Dropdown ===== */
+.add-product-selector {
+  width: 160px;
+  height: 50px;
+  font-size: 14px;
+  color: var(--text-dark);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--card-bg);
+  padding: 0 10px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.add-product-selector:focus {
+  border-color: var(--primary);
+}
+
+/* ===== Thumbnail Preview ===== */
+.addProduct-thumbnail-img {
+  height: 120px;
+  width: 120px;
+  border-radius: 10px;
+  object-fit: contain;
+  margin: 10px 0;
+  border: 1px dashed var(--border);
+  background: var(--bg-light);
+  padding: 8px;
+}
+
+/* ===== Submit Button ===== */
+.addProduct-btn {
+  margin-top: 20px;
+  width: 160px;
+  height: 50px;
+  border-radius: 8px;
+  background: var(--primary);
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.addProduct-btn:hover {
+  background: #357ABD;
+  transform: translateY(-2px);
+}
+
+.addProduct-btn:active {
+  transform: translateY(0);
+}
+
+/* ===== Responsive ===== */
+@media(max-width:800px) {
+  .addProduct {
+    width: auto;
+    padding: 20px;
+    margin: 15px;
+  }
+
+  .addProduct-price {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .add-product-selector {
     width: 100%;
-    max-width: 800px;
-    padding: 30px 50px;
-    margin: 20px 30px;
-    border-radius: 6px;
-    background: white;
-}
-
-.addProduct-itemField{
-    width: 100%;
-    color: gray;
-    font-size: 16px;
-}
-
-.addProduct-itemField input{
-    box-sizing: border-box;
-    width: 100%;
-    height: 50px;
-    border-radius: 4px;
-    padding: 1px solid gray;
-    outline: none;
-    color: black;
-    font-family: 'Poppins';
-    font-size: 14px;
-}
-
-.addProduct-price{
-    display: flex;
-    gap: 40px;
-}
-
-.add-product-selector{
-    padding: 10px;
-    width: 100px;
-    height: 50px;
-    font-size: 14px;
-    color: gray;
-    border: 1px solid black;
-    border-radius: 4px;
-}
-
-.addProduct-thumbnail-img{
-    height: 120px;
-    width: 120px;
-    border-radius: 10px;
-    object-fit: contain;
-    margin: 10px 0;
-}
-
-.addProduct-btn{
-    margin-top: 20px;
-    width: 160px;
-    height: 50px;
-    border-radius: 6px;
-    background: blue;
-    border: none;
-    cursor: pointer;
-    color: white;
-    font-size: 16px;
-    font-weight: 500;
-}
-
-@media(max-width:800px){
-    .addProduct{
-        width: auto;
-        padding: 30px;
-        margin: 20px;
-    }
+  }
 }
