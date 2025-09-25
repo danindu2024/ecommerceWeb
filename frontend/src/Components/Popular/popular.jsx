@@ -51,7 +51,7 @@ const Popular = () => {
           name={item.name} 
           new_price={item.new_price} 
           old_price={item.old_price}
-          index={i}   // pass index for stagger
+          index={i}
         />
       ))}
       </motion.div>
