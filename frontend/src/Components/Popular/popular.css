@@ -1,53 +1,58 @@
+:root {
+  --primary: #6C63FF;      /* Vibrant violet */
+  --accent-pink: #FF4D6D;  /* Playful pink */
+  --accent-teal: #00C9A7;  /* Fresh teal */
+  --neutral: #F9FAFB;      /* Light neutral */
+  --dark: #1F2937;         /* Deep gray for text */
+}
+
 .popular {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    margin-top: 50px;
-    padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  margin: 70px auto;
+  padding: 0 20px;
+  max-width: 1400px;
 }
 
 .popular h1 {
-    font-size: 48px;
-    font-weight: 700;
-    color: #222222; /* dark for readability */
-    letter-spacing: 1px;
-    text-transform: uppercase;
+  font-size: clamp(1.5rem, 4vw, 2.8rem);
+  font-weight: 700;
+  color: var(--text-dark, #1a1a1a);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  text-align: center;
 }
 
 .popular hr {
-    width: 180px;
-    height: 6px;
-    border-radius: 10px;
-    background: #ff4d6d; /* coral for consistency */
-    border: none;
+  width: 120px;
+  height: 4px;
+  border-radius: 10px;
+  background: var(--accent-color, #ff4d6d);
+  border: none;
 }
 
 .popular-items {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 30px;
-    margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 28px;
+  margin-top: 40px;
+  width: 100%;
 }
 
-/* Responsive scaling for h1 and hr */
-@media(max-width: 1280px) {
-    .popular h1 { font-size: 42px; }
-    .popular hr { width: 160px; height: 5px; }
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-@media(max-width: 1080px) {
-    .popular h1 { font-size: 36px; }
-    .popular hr { width: 140px; height: 5px; }
-}
-
-@media(max-width: 800px) {
-    .popular h1 { font-size: 30px; }
-    .popular hr { width: 120px; height: 4px; }
-}
-
-@media(max-width: 500px) {
-    .popular h1 { font-size: 24px; }
-    .popular hr { width: 100px; height: 3px; }
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
