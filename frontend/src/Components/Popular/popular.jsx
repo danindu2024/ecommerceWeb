@@ -14,14 +14,7 @@ const Popular = () => {
   }, []);
 
   return (
-    <motion.section
-      className="popular"
-      id="popular-brands"
-      initial={{ opacity: 0, y: 60 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-      viewport={{ once: true, amount: 0.2 }} // triggers once when 20% visible
-    >
+    <section className="popular" id="popular-brands">
       <motion.h1
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -37,25 +30,20 @@ const Popular = () => {
         style={{ transformOrigin: 'center' }}
       />
 
-      <motion.div
-        className="popular-items"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.9, delay: 0.5 }}
-      >
+      <div className="popular-items">
         {popularProducts.map((item, i) => (
-        <Item 
-          key={i} 
-          id={item.id} 
-          image={item.image} 
-          name={item.name} 
-          new_price={item.new_price} 
-          old_price={item.old_price}
-          index={i}
-        />
-      ))}
-      </motion.div>
-    </motion.section>
+          <Item
+            key={item.id}
+            id={item.id}
+            image={item.image}
+            name={item.name}
+            new_price={item.new_price}
+            old_price={item.old_price}
+            index={i} // for staggered motion inside Item
+          />
+        ))}
+      </div>
+    </section>
   );
 };
 
