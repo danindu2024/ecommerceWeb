@@ -44,15 +44,16 @@ const Popular = () => {
         transition={{ duration: 0.9, delay: 0.5 }}
       >
         {popularProducts.map((item, i) => (
-          <Item
-            key={item.id || i}
-            id={item.id}
-            image={item.image}
-            name={item.name}
-            new_price={item.new_price}
-            old_price={item.old_price}
-          />
-        ))}
+        <Item 
+          key={i} 
+          id={item.id} 
+          image={item.image} 
+          name={item.name} 
+          new_price={item.new_price} 
+          old_price={item.old_price}
+          index={i}   // pass index for stagger
+        />
+      ))}
       </motion.div>
     </motion.section>
   );
