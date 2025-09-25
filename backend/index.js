@@ -79,6 +79,24 @@ const Product = mongoose.model("Product", {
     },
 })
 
+// Schema for User Cart
+const UserCart = mongoose.model("UserCart", {
+    userId: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    cartItems: {
+        type: Map,
+        of: Number,
+        default: {}
+    },
+    lastUpdated: {
+        type: Date,
+        default: Date.now
+    }
+})
+
 app.post('/addProduct', async (req, res) => {
 
     let products = await Product.find({});
@@ -148,6 +166,111 @@ app.get('/newcollection', async (req, res) => {
     
 })
 
+//Endpoint for popular in women section
+app.get('/popularwomen', async (req, res) => {
+    let products = await Product.find({category: "women"})
+    let popularWomen = products.slice(1).slice(-4)
+    res.send(popularWomen)
+})
+
+// Cart APIs
+
+// Get user cart
+app.get('/cart/:userId', async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const userCart = await UserCart.findOne({ userId: userId });
+        
+        if (userCart) {
+            res.json({
+                success: true,
+                cartItems: userCart.cartItems
+            });
+        } else {
+            res.json({
+                success: true,
+                cartItems: {}
+            });
+        }
+    } catch (error) {
+        console.error('Error fetching cart:', error);
+        res.json({
+            success: false,
+            error: 'Failed to fetch cart'
+        });
+    }
+});
+
+// Save/Update user cart
+app.post('/cart/save', async (req, res) => {
+    try {
+        const { userId, cartItems } = req.body;
+        
+        if (!userId) {
+            return res.json({
+                success: false,
+                error: 'User ID is required'
+            });
+        }
+
+        const existingCart = await UserCart.findOne({ userId: userId });
+        
+        if (existingCart) {
+            existingCart.cartItems = cartItems;
+            existingCart.lastUpdated = new Date();
+            await existingCart.save();
+        } else {
+            const newCart = new UserCart({
+                userId: userId,
+                cartItems: cartItems
+            });
+            await newCart.save();
+        }
+        
+        res.json({
+            success: true,
+            message: 'Cart saved successfully'
+        });
+    } catch (error) {
+        console.error('Error saving cart:', error);
+        res.json({
+            success: false,
+            error: 'Failed to save cart'
+        });
+    }
+});
+
+// Clear user cart
+app.post('/cart/clear', async (req, res) => {
+    try {
+        const { userId } = req.body;
+        
+        if (!userId) {
+            return res.json({
+                success: false,
+                error: 'User ID is required'
+            });
+        }
+
+        await UserCart.findOneAndUpdate(
+            { userId: userId },
+            { cartItems: {}, lastUpdated: new Date() },
+            { upsert: true }
+        );
+        
+        res.json({
+            success: true,
+            message: 'Cart cleared successfully'
+        });
+    } catch (error) {
+        console.error('Error clearing cart:', error);
+        res.json({
+            success: false,
+            error: 'Failed to clear cart'
+        });
+    }
+});
+
 app.listen(port, (error)=>{
     if(!error){
         console.log("Server running on port "+port);
@@ -157,4 +280,3 @@ app.listen(port, (error)=>{
         
     }
 })
-

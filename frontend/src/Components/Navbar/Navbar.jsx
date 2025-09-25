@@ -6,13 +6,13 @@ import Cart_logo from '../Asserts/cart_icon.png'
 import { Link } from 'react-router-dom'
 import { ShopContext } from '../../Context/ShopContext'
 import nav_dropdown from '../Asserts/nav_dropdown.png'
-import { useAuth0 } from "@auth0/auth0-react"   // ✅ import Auth0 hook
+import { useAuth0 } from "@auth0/auth0-react"
 
 const Navbar = () => {
   const [menu, setMenu] = useState("shop")
-  const { getTotalCartItems } = useContext(ShopContext)
+  const { getTotalCartItems, isCartLoaded } = useContext(ShopContext)
   const menuRef = useRef()
-  const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0() // ✅ Auth0 state
+  const { loginWithRedirect, logout, isAuthenticated, user, isLoading } = useAuth0()
 
   const dropdown_toggle = (e) => {
     menuRef.current.classList.toggle('nav-menu-visible');
@@ -36,9 +36,10 @@ const Navbar = () => {
       </ul>
 
       <div className="nav-login-cart">
-        {isAuthenticated ? (
+        {isLoading ? (
+          <span>Loading...</span>
+        ) : isAuthenticated ? (
           <>
-            {/* ✅ Show user info when logged in */}
             <span className="user-name">Hi, {user.name || user.email}</span>
             <button 
               onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
@@ -53,7 +54,9 @@ const Navbar = () => {
         <Link style={{ textDecoration: 'none' }} to='/cart'>
           <img src={Cart_logo} alt="cart_logo" />
         </Link>
-        <div className="nav-cart-court">{getTotalCartItems()}</div>
+        <div className="nav-cart-court">
+          {isCartLoaded ? getTotalCartItems() : '...'}
+        </div>
       </div>
     </div>
   )
