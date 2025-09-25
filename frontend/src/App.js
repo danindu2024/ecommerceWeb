@@ -5,11 +5,11 @@ import Shop from './Pages/Shop';
 import ShopCategory from './Pages/ShopCategory';
 import Product from './Pages/Product';
 import Cart from './Pages/Cart';
-import LoginSignup from './Pages/LoginSignup';
 import Footer from './Components/Footer/footer';
 import men_banner from './Components/Asserts/banner_mens.png'
 import women_banner from './Components/Asserts/banner_women.png'
 import kids_banner from './Components/Asserts/banner_kids.png'
+import LoginRedirect from './Pages/LoginRedirect';
 
 function App() {
   return (
@@ -25,7 +25,7 @@ function App() {
           <Route path=':productId' element={<Product />}/>
         </Route>
         <Route path='/cart' element={<Cart />}/>
-        <Route path='/login' element={<LoginSignup />}/>
+        <Route path='/login' element={<LoginRedirect />}/>
       </Routes>
       <Footer />
       </BrowserRouter>
