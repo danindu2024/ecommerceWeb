@@ -1,25 +1,24 @@
-import React from 'react'
-import './CSS/loginsignup.css'
+import React from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const LoginSignup = () => {
-  return (
-    <div className='loginsignup'>
-      <div className="loginsignuo-container">
-        <h1>Sign Up</h1>
-        <div className="loginsignup-fields">
-          <input type="text" placeholder='Your Name'/>
-          <input type="email" placeholder='Email Address' />
-          <input type="password" placeholder='Password'/>
-        </div>
-        <button>Continue</button>
-        <p className='loginsignup-login'>Already Have an Account <span>Login Here</span></p>
-        <div className="loginsignup-agree">
-          <input type="checkbox" name='' id=''/>
-          <p>By continuing, I agree to the terms of use & privacy policy.</p>
-        </div>
-      </div>
-    </div>
-  )
-}
+  const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
 
-export default LoginSignup
+  return (
+    <div>
+      {!isAuthenticated && (
+        <button onClick={() => loginWithRedirect()}>Login / Sign Up</button>
+      )}
+      {isAuthenticated && (
+        <div>
+          <p>Welcome, {user.name}</p>
+          <button onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
+            Logout
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default LoginSignup;
