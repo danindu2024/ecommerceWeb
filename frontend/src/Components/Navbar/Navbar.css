@@ -124,6 +124,17 @@
     display: none;
 }
 
+@keyframes dropdownSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Responsive */
 @media (max-width: 1280px) {
     .nav-menu {
@@ -189,15 +200,18 @@
     }
     .nav-menu{
         display: none;
-        height: 80px;
+        flex-direction: column;
         width: 100%;
-        position: absolute;
         background: #fff5f5;
         justify-content: center;
-        top: 50px;
+        align-items: center;
+        padding: 12px 0;
+        position: relative; 
+        top: 0px;
     }
     .nav-menu-visible{
         display: flex;
+        animation: dropdownSlide 0.3s ease forwards;
     }
     .nav-dropdown.open{
         transform: rotate(90deg);
