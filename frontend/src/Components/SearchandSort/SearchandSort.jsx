@@ -177,11 +177,6 @@ const SearchAndSort = () => {
             <FiChevronDown />
           </div>
         </div>
-        {sortOption !== 'default' && (
-          <div className="active-sort">
-            Sorted by: {getSortOptionLabel(sortOption)}
-          </div>
-        )}
       </div>
     </div>
   );

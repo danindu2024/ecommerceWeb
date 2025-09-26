@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react'
+import React, { useContext, useMemo, useState } from 'react'
 import '../Pages/CSS/shopCategory.css'
 import { ShopContext } from '../Context/ShopContext'
 import Item from '../Components/Item/item'
@@ -6,11 +6,18 @@ import SearchAndSort from '../Components/SearchandSort/SearchandSort'
 
 const ShopCategory = (props) => {
   const { filteredProducts } = useContext(ShopContext)
+  const [visibleCount, setVisibleCount] = useState(8) // show 8 initially
 
   // Filter products by category
   const categoryProducts = useMemo(() => {
     return filteredProducts.filter(item => item.category === props.category)
   }, [filteredProducts, props.category])
+
+  const visibleProducts = categoryProducts.slice(0, visibleCount)
+
+  const handleExploreMore = () => {
+    setVisibleCount(categoryProducts.length) // show all remaining products
+  }
 
   return (
     <div className='shopCategory'>
@@ -25,7 +32,7 @@ const ShopCategory = (props) => {
       {/* Index + Sort Info */}
       <div className="shopCategory-indexSort">
         <p>
-          <span>Showing 1–{categoryProducts.length}</span> of {categoryProducts.length} products
+          <span>Showing 1–{visibleProducts.length}</span> of {categoryProducts.length} products
         </p>
       </div>
       
@@ -37,7 +44,7 @@ const ShopCategory = (props) => {
             <p>Try adjusting your search terms or filters</p>
           </div>
         ) : (
-          categoryProducts.map((item, i) => (
+          visibleProducts.map((item, i) => (
             <Item 
               key={i} 
               id={item.id} 
@@ -51,9 +58,11 @@ const ShopCategory = (props) => {
       </div>
       
       {/* Load More */}
-      <div className="shopCategory-loadmore">
-        Explore More
-      </div>
+      {visibleCount < categoryProducts.length && (
+        <div className="shopCategory-loadmore" onClick={handleExploreMore}>
+          Explore More
+        </div>
+      )}
     </div>
   )
 }
