@@ -1,70 +1,345 @@
-# Getting Started with Create React App
+# E-Commerce Website - MERN Stack
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A full-stack e-commerce application built with the MERN stack, featuring user authentication via Auth0, PayPal payment integration, and an admin panel for product management.
 
-## Available Scripts
+## 🚀 Features
 
-In the project directory, you can run:
+### Core Features
+- ✅ **Product Catalog**: View all products with detailed information
+- ✅ **Product Details**: Individual product pages with comprehensive details
+- ✅ **Shopping Cart**: Add, view, and manage items in cart
+- ✅ **User Authentication**: Secure login/signup using Auth0
+- ✅ **Payment Integration**: PayPal payment processing
+- ✅ **Admin Panel**: Product management interface for administrators
 
-### `npm start`
+### Technical Features
+- **Frontend**: React.js with modern hooks and routing
+- **Backend**: Node.js/Express.js REST API
+- **Database**: MongoDB with Mongoose ODM
+- **Authentication**: Auth0 integration
+- **Payments**: PayPal REST SDK
+- **State Management**: React Context/Hooks
+- **UI/Animation**: Framer Motion for smooth animations
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 🏗️ Architecture
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│                 │    │                 │    │                 │
+│   Frontend      │◄──►│   Backend       │◄──►│   Database      │
+│   (React)       │    │   (Express)     │    │   (MongoDB)     │
+│                 │    │                 │    │                 │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                       │
+         ▼                       ▼
+┌─────────────────┐    ┌─────────────────┐
+│                 │    │                 │
+│   Auth0         │    │   PayPal API    │
+│   (Authentication)   │   (Payments)    │
+│                 │    │                 │
+└─────────────────┘    └─────────────────┘
 
-### `npm test`
+┌─────────────────┐
+│                 │
+│   Admin Panel   │
+│   (Vite+React)  │
+│                 │
+└─────────────────┘
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 📋 Prerequisites
 
-### `npm run build`
+Before running this project, make sure you have the following installed:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **Node.js** (v14 or higher)
+- **npm** or **yarn**
+- **MongoDB** (local installation or MongoDB Atlas)
+- **Git**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 🛠️ Installation & Setup
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 1. Clone the Repository
 
-### `npm run eject`
+```bash
+git clone <your-repository-url>
+cd ecommerce-website
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### 2. Backend Setup
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+# Navigate to backend directory
+cd backend
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+# Install dependencies
+npm install
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+# Create environment variables file
+touch .env
+```
 
-## Learn More
+Add the following environment variables to your `.env` file:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```env
+# Server Configuration
+PORT=5000
+NODE_ENV=development
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+# MongoDB Configuration
+MONGODB_URI=mongodb://localhost:27017/ecommerce
+# Or for MongoDB Atlas:
+# MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/ecommerce
 
-### Code Splitting
+# JWT Configuration
+JWT_SECRET=your_jwt_secret_key_here
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+# Auth0 Configuration (if used in backend)
+AUTH0_DOMAIN=your-auth0-domain
+AUTH0_CLIENT_ID=your-auth0-client-id
+AUTH0_CLIENT_SECRET=your-auth0-client-secret
 
-### Analyzing the Bundle Size
+# PayPal Configuration
+PAYPAL_CLIENT_ID=your-paypal-client-id
+PAYPAL_CLIENT_SECRET=your-paypal-client-secret
+PAYPAL_MODE=sandbox # or 'live' for production
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### 3. Frontend Setup
 
-### Making a Progressive Web App
+```bash
+# Navigate to frontend directory (from root)
+cd frontend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+# Install dependencies
+npm install
 
-### Advanced Configuration
+# Create environment variables file
+touch .env
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Add the following environment variables to your frontend `.env` file:
 
-### Deployment
+```env
+# Auth0 Configuration
+REACT_APP_AUTH0_DOMAIN=your-auth0-domain
+REACT_APP_AUTH0_CLIENT_ID=your-auth0-client-id
+REACT_APP_AUTH0_REDIRECT_URI=http://localhost:3000
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+# API Configuration
+REACT_APP_API_URL=http://localhost:5000/api
 
-### `npm run build` fails to minify
+# PayPal Configuration
+REACT_APP_PAYPAL_CLIENT_ID=your-paypal-client-id
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### 4. Admin Panel Setup
+
+```bash
+# Navigate to admin directory (from root)
+cd admin
+
+# Install dependencies
+npm install
+
+# Create environment variables file (if needed)
+touch .env
+```
+
+Add environment variables to admin `.env` file:
+
+```env
+VITE_API_URL=http://localhost:5000/api
+```
+
+## 🚀 Running the Application
+
+### Development Mode
+
+You'll need to run all three parts of the application:
+
+#### 1. Start MongoDB
+Make sure MongoDB is running on your system:
+```bash
+# If using local MongoDB
+sudo systemctl start mongod
+# or
+brew services start mongodb/brew/mongodb-community
+```
+
+#### 2. Start Backend Server
+```bash
+cd backend
+npm run dev
+```
+Backend will run on `http://localhost:5000`
+
+#### 3. Start Frontend Application
+```bash
+cd frontend
+npm start
+```
+Frontend will run on `http://localhost:3000`
+
+#### 4. Start Admin Panel
+```bash
+cd admin
+npm run dev
+```
+Admin panel will run on `http://localhost:5173` (Vite default)
+
+## 📁 Project Structure
+
+```
+ecommerce-website/
+├── backend/                 # Express.js backend
+│   ├── models/             # Mongoose models
+│   ├── routes/             # API routes
+│   ├── middleware/         # Custom middleware
+│   ├── config/             # Configuration files
+│   └── index.js            # Server entry point
+├── frontend/               # React.js frontend
+│   ├── public/             # Public assets
+│   ├── src/
+│   │   ├── components/     # React components
+│   │   ├── pages/          # Page components
+│   │   ├── context/        # React Context
+│   │   ├── services/       # API services
+│   │   └── App.js          # Main App component
+│   └── package.json
+├── admin/                  # Admin panel (Vite + React)
+│   ├── src/
+│   │   ├── components/     # Admin components
+│   │   ├── pages/          # Admin pages
+│   │   └── main.jsx        # Entry point
+│   └── package.json
+└── README.md
+```
+
+## 🔧 Configuration
+
+### Auth0 Setup
+1. Create an Auth0 account at [auth0.com](https://auth0.com)
+2. Create a new application (Single Page Application)
+3. Configure allowed callback URLs: `http://localhost:3000`
+4. Configure allowed logout URLs: `http://localhost:3000`
+5. Copy Domain and Client ID to your environment variables
+
+### PayPal Setup
+1. Create a PayPal Developer account at [developer.paypal.com](https://developer.paypal.com)
+2. Create a new application in the sandbox
+3. Copy Client ID and Client Secret to your environment variables
+4. For production, switch to live mode and use live credentials
+
+## 🧪 Testing
+
+### Backend API Testing
+Use Postman or similar tools to test API endpoints:
+
+```bash
+# Get all products
+GET http://localhost:5000/api/products
+
+# Get single product
+GET http://localhost:5000/api/products/:id
+
+# Add to cart (requires authentication)
+POST http://localhost:5000/api/cart/add
+```
+
+### Frontend Testing
+```bash
+cd frontend
+npm test
+```
+
+## 📦 Build for Production
+
+### Backend
+```bash
+cd backend
+npm start
+```
+
+### Frontend
+```bash
+cd frontend
+npm run build
+# Serve the build folder using a static server
+```
+
+### Admin Panel
+```bash
+cd admin
+npm run build
+# Serve the dist folder using a static server
+```
+
+## 🔍 API Endpoints
+
+### Products
+- `GET /api/products` - Get all products
+- `GET /api/products/:id` - Get single product
+- `POST /api/products` - Create product (admin only)
+- `PUT /api/products/:id` - Update product (admin only)
+- `DELETE /api/products/:id` - Delete product (admin only)
+
+### Cart
+- `GET /api/cart` - Get user's cart
+- `POST /api/cart/add` - Add item to cart
+- `PUT /api/cart/update` - Update cart item
+- `DELETE /api/cart/remove/:id` - Remove item from cart
+
+### Payment
+- `POST /api/payment/create` - Create PayPal payment
+- `POST /api/payment/execute` - Execute PayPal payment
+
+## 🚨 Troubleshooting
+
+### Common Issues
+
+1. **MongoDB Connection Error**
+   - Ensure MongoDB is running
+   - Check connection string in `.env` file
+   - Verify network access for MongoDB Atlas
+
+2. **Auth0 Authentication Issues**
+   - Verify Auth0 domain and client ID
+   - Check callback URLs configuration
+   - Ensure HTTPS in production
+
+3. **PayPal Integration Issues**
+   - Verify PayPal credentials
+   - Check sandbox vs live mode settings
+   - Ensure proper PayPal SDK initialization
+
+4. **CORS Issues**
+   - Verify backend CORS configuration
+   - Check frontend API URL configuration
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/new-feature`)
+3. Commit your changes (`git commit -am 'Add new feature'`)
+4. Push to the branch (`git push origin feature/new-feature`)
+5. Create a Pull Request
+
+## 📄 License
+
+This project is licensed under the ISC License.
+
+## 👥 Team
+
+- **Developer**: [Your Name]
+- **Assignment**: E-Commerce Website Development
+- **Course**: [Course Name]
+
+## 📞 Support
+
+For any questions or issues, please contact:
+- Email: [your-email@example.com]
+- GitHub: [your-github-username]
+
+---
+
+**Note**: This project was developed as part of Assignment 3 - E-Commerce Website Development, meeting all core requirements and implementing bonus features including authentication and payment integration.
