@@ -7,6 +7,7 @@ const Addproduct = () => {
   const [productDetails, setProductDetails] = useState({
     name: "",
     image: "",
+    description: "",
     category: "women",
     new_price: "",
     old_price: ""
@@ -23,41 +24,36 @@ const Addproduct = () => {
   };
 
   const Add_Product = async () => {
-    //console.log(productDetails);
-
     let responseData;
     let product = productDetails;
 
+    // Upload image first
     let formData = new FormData();
     formData.append('product', image);
 
     await fetch('http://localhost:4000/upload', {
       method: 'POST',
-      headers: {
-        Accept: 'application/json',
-      },
+      headers: { Accept: 'application/json' },
       body: formData,
     })
-      .then((resp) => resp.json())
-      .then((data) => {
-        responseData = data;
-      });
+    .then(resp => resp.json())
+    .then(data => { responseData = data; });
 
     if (responseData.success) {
       product.image = responseData.image_url;
-      //console.log("Product with image URL:", product);
-      
+
       await fetch('http://localhost:4000/addProduct', {
         method: 'POST',
         headers: {
-          Accept:'application/-json',
+          Accept: 'application/json',
           'Content-Type':'application/json'
         },
-        body:JSON.stringify(product),
-      }).then((resp) => resp.json())
-        .then((data) => {
-        data.success?alert("Product Added"):alert("Failed")
+        body: JSON.stringify(product),
       })
+      .then(resp => resp.json())
+      .then(data => {
+        data.success ? alert("Product Added") : alert("Failed to Add Product");
+      });
     }
   };
 
@@ -71,6 +67,18 @@ const Addproduct = () => {
           type="text"
           name='name'
           placeholder='Type Here'
+        />
+      </div>
+
+      <div className="addProduct-itemField">
+        <p>Product Description</p>
+        <textarea
+          value={productDetails.description}
+          onChange={changeHandler}
+          name="description"
+          placeholder="Enter product description"
+          rows={4}
+          style={{ width: '100%', borderRadius: '6px', border: '1px solid #E0E0E0', padding: '8px', fontSize: '14px' }}
         />
       </div>
 

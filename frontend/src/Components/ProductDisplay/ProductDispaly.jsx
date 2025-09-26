@@ -9,7 +9,7 @@ const ProductDisplay = () => {
   const { productId } = useParams();
   const { addToCart } = useContext(ShopContext);
   const [product, setProduct] = useState(null);
-  const [selectedSize, setSelectedSize] = useState(null); // selected size
+  const [selectedSize, setSelectedSize] = useState(null);
 
   useEffect(() => {
     fetch(`http://localhost:4000/product/${productId}`)
@@ -31,7 +31,7 @@ const ProductDisplay = () => {
             <img key={idx} src={product.image} alt={product.name} />
           ))}
         </div>
-        <div className="prductDisplay-img">
+        <div className="productDisplay-img">
           <img className='productDisplay-main-img' src={product.image} alt={product.name} />
         </div>
       </div>
@@ -51,8 +51,9 @@ const ProductDisplay = () => {
           <div className="productDisplay-right-price-new">Rs. {product.new_price}</div>
         </div>
 
+        {/* Product Description */}
         <div className="productDisplay-right-description">
-          {product.description || "No description available."}
+          <p>{product.description || "No description available."}</p>
         </div>
 
         {/* Sizes */}

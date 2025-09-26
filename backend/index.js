@@ -93,6 +93,10 @@ const Product = mongoose.model("Product", {
         type:Boolean,
         default:true,
     },
+    description: { 
+        type: String,
+        required: false,
+    },
 })
 
 // Schema for User Cart
@@ -134,7 +138,8 @@ app.post('/addProduct', async (req, res) => {
         image:req.body.image,
         category:req.body.category,
         new_price:req.body.new_price,
-        old_price:req.body.old_price
+        old_price:req.body.old_price,
+        description: req.body.description,
     })
 
     console.log(product);
