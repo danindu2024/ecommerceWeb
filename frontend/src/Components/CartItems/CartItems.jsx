@@ -3,6 +3,7 @@ import './CartItems.css';
 import { ShopContext } from '../../Context/ShopContext';
 import remove_icon from '../Asserts/cart_cross_icon.png';
 import { useAuth0 } from "@auth0/auth0-react";
+import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 
 const CartItems = () => {
   const { 
@@ -13,9 +14,9 @@ const CartItems = () => {
     clearUserCart,
     isCartLoaded 
   } = useContext(ShopContext);
+
   const { isAuthenticated } = useAuth0();
 
-  // Show loading state while cart is being loaded
   if (!isCartLoaded) {
     return (
       <div className='cartItems'>
@@ -24,7 +25,10 @@ const CartItems = () => {
     );
   }
 
-  const hasItemsInCart = Object.values(cartItems).some(quantity => quantity > 0);
+  const hasItemsInCart = Object.values(cartItems).some(q => q > 0);
+
+  // Convert amount to USD for PayPal (example conversion)
+  const totalUSD = (getTotalCartAmount() / 350).toFixed(2);
 
   return (
     <div className='cartItems'>
@@ -37,30 +41,31 @@ const CartItems = () => {
         <p>Remove</p>
       </div>
       <hr />
-      
+
       {!hasItemsInCart ? (
         <div className="empty-cart">
           <p>Your cart is empty</p>
           {!isAuthenticated && (
             <p className="guest-notice">
-              <small>Note: As a guest, your cart will be cleared when you leave the site. 
-              Log in to save your cart items!</small>
+              <small>
+                Note: As a guest, your cart will be cleared when you leave the site. Log in to save your cart items!
+              </small>
             </p>
           )}
         </div>
       ) : (
-        all_product.map((e) => {
-          if (cartItems[e.id] > 0) {
+        all_product.map((item) => {
+          if (cartItems[item.id] > 0) {
             return (
-              <div key={e.id} className="cartItems-format cartItems-format-main">
-                <img src={e.image} alt={e.name} className='cartIcon-product-icon' />
-                <p>{e.name}</p>
-                <p>Rs. {e.new_price}</p>
-                <button className='cartItems-quantity'>{cartItems[e.id]}</button>
-                <p>Rs. {e.new_price * cartItems[e.id]}</p>
+              <div key={item.id} className="cartItems-format cartItems-format-main">
+                <img src={item.image} alt={item.name} className='cartIcon-product-icon' />
+                <p>{item.name}</p>
+                <p>Rs. {item.new_price}</p>
+                <button className='cartItems-quantity'>{cartItems[item.id]}</button>
+                <p>Rs. {item.new_price * cartItems[item.id]}</p>
                 <img
                   src={remove_icon} 
-                  onClick={() => removeFromCart(e.id)} 
+                  onClick={() => removeFromCart(item.id)} 
                   alt="Remove" 
                   className='cartItems-remove-icon'
                 />
@@ -90,18 +95,20 @@ const CartItems = () => {
               Clear Cart
             </button>
           </div>
-              {isAuthenticated && (
-              <div className="cart-persistence-info" style={{
-                backgroundColor: '#e8f5e8',
-                padding: '10px',
-                margin: '10px 0',
-                borderRadius: '5px',
-                fontSize: '14px',
-                color: '#2d5a2d'
-              }}>
-          ✓ Your cart is automatically saved and will be restored when you return!
-        </div>
-      )}
+
+          {!isAuthenticated && (
+            <div className="cart-persistence-info" style={{
+              backgroundColor: '#fff4e6',
+              padding: '10px',
+              margin: '10px 0',
+              borderRadius: '5px',
+              fontSize: '14px',
+              color: '#a63e00'
+            }}>
+              ⚠ Your cart will not be saved because you are not logged in.
+            </div>
+          )}
+
           <div className="cartItems-down">
             <div className="cartItems-total">
               <h1>Cart Totals</h1>
@@ -121,12 +128,41 @@ const CartItems = () => {
                   <h3>Rs. {getTotalCartAmount()}</h3>
                 </div>
               </div>
-              <button>PROCEED TO CHECKOUT</button>
+
+              {/* ------------------- PayPal Buttons ------------------- */}
+              <PayPalScriptProvider options={{ "client-id": `${process.env.PAYPAL_CLIENT_ID}`, currency: "LKR" }}>
+                <PayPalButtons
+                  style={{ layout: 'vertical', color: 'blue', shape: 'rect', label: 'pay' }}
+                  createOrder={async (data, actions) => {
+                    const res = await fetch('http://localhost:4000/paypal/create-order', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ amount: totalUSD })
+                    });
+                    const orderData = await res.json();
+                    return orderData.id;
+                  }}
+                  onApprove={async (data, actions) => {
+                    const res = await fetch(`http://localhost:4000/paypal/capture-order/${data.orderID}`, {
+                      method: 'POST',
+                    });
+                    const captureData = await res.json();
+                    console.log('Payment successful:', captureData);
+                    alert('Payment Successful!');
+                    clearUserCart(); // Clear cart after payment
+                  }}
+                  onError={(err) => {
+                    console.error(err);
+                    alert('Payment failed. Try again!');
+                  }}
+                />
+              </PayPalScriptProvider>
             </div>
+
             <div className="cartItems-promocode">
-              <p>If you have a promo code, Enter it here</p>
+              <p>If you have a promo code, enter it here</p>
               <div className="cartItems-promobox">
-                <input type="text" placeholder='promo code'/>
+                <input type="text" placeholder='Promo code'/>
                 <button>Submit</button>
               </div>
             </div>
