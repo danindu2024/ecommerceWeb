@@ -1,7 +1,20 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react';
 import './DescriptionBox.css'
+import { useParams } from 'react-router-dom';
 
 const DescriptionBox = () => {
+  const { productId } = useParams();
+  const [product, setProduct] = useState(null);
+
+  useEffect(() => {
+      fetch(`http://localhost:4000/product/${productId}`)
+        .then(res => res.json())
+        .then(data => setProduct(data))
+        .catch(err => console.log(err));
+    }, [productId]);
+
+    if (!product) return <p>Loading...</p>;
+
   return (
     <div className='descriptionBox'>
       <div className="descriptionBox-navigator">
@@ -9,8 +22,7 @@ const DescriptionBox = () => {
         <div className="descriptionBox-nav-box fade">Reviews (22)</div>
       </div>
       <div className="descriptionBox-description">
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium rerum expedita deleniti eaque, laborum repudiandae quam, itaque iure pariatur id ducimus asperiores minima corrupti perspiciatis minus tempore. Laudantium, doloribus aliquid.</p>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate, dolore, consectetur autem itaque sed nesciunt iure voluptatibus aliquam possimus corporis illo quam atque, qui fugit maiores? Architecto cumque consectetur sapiente.</p>
+        {product.description || "No description available."}
       </div>
     </div>
   )
