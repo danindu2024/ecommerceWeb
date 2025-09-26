@@ -392,6 +392,17 @@ app.post('/cart/clear', async (req, res) => {
     }
 });
 
+// API for get single product details
+app.get('/product/:id', async (req, res) => {
+  try {
+    const product = await Product.findOne({ id: Number(req.params.id) });
+    res.json(product);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
 app.listen(port, (error)=>{
     if(!error){
         console.log("Server running on port "+port);
