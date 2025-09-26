@@ -15,15 +15,56 @@ const ShopContextProvider = (props) => {
   const [all_product, setAll_Product] = useState([]);
   const [cartItems, setCartItems] = useState(getDefaultCart());
   const [isCartLoaded, setIsCartLoaded] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortOption, setSortOption] = useState('default');
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const { isAuthenticated, user, isLoading } = useAuth0();
 
   // Fetch all products
   useEffect(() => {
     fetch('http://localhost:4000/allProducts')
       .then((res) => res.json())
-      .then((data) => setAll_Product(data))
+      .then((data) => {
+        setAll_Product(data);
+        setFilteredProducts(data);
+      })
       .catch(err => console.error('Error fetching products:', err));
   }, []);
+
+  // Filter and sort products when search term or sort option changes
+  useEffect(() => {
+    let filtered = all_product.filter(product =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.category.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    // Apply sorting
+    switch (sortOption) {
+      case 'price-low-high':
+        filtered.sort((a, b) => a.new_price - b.new_price);
+        break;
+      case 'price-high-low':
+        filtered.sort((a, b) => b.new_price - a.new_price);
+        break;
+      case 'name-a-z':
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case 'name-z-a':
+        filtered.sort((a, b) => b.name.localeCompare(a.name));
+        break;
+      case 'newest':
+        filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+        break;
+      case 'oldest':
+        filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+        break;
+      default:
+        // Keep original order
+        break;
+    }
+
+    setFilteredProducts(filtered);
+  }, [searchTerm, sortOption, all_product]);
 
   // Load cart when authentication state changes
   useEffect(() => {
@@ -160,13 +201,18 @@ const ShopContextProvider = (props) => {
 
   const contextValue = {
     all_product,
+    filteredProducts,
     cartItems,
     addToCart,
     removeFromCart,
     getTotalCartAmount,
     getTotalCartItems,
     clearUserCart,
-    isCartLoaded
+    isCartLoaded,
+    searchTerm,
+    setSearchTerm,
+    sortOption,
+    setSortOption
   };
 
   return (

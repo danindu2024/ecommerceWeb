@@ -97,6 +97,8 @@ const UserCart = mongoose.model("UserCart", {
     }
 })
 
+//API for add product
+
 app.post('/addProduct', async (req, res) => {
 
     let products = await Product.find({});
@@ -154,6 +156,125 @@ app.get('/allProducts', async (req, res) => {
     res.send(products)
     
 })
+
+// API for searching products
+app.get('/search', async (req, res) => {
+    try {
+        const { q, category, sort, limit = 50 } = req.query;
+        
+        let query = {};
+        
+        // Build search query
+        if (q) {
+            query.$or = [
+                { name: { $regex: q, $options: 'i' } },
+                { category: { $regex: q, $options: 'i' } }
+            ];
+        }
+        
+        // Filter by category if specified
+        if (category && category !== 'all') {
+            query.category = category;
+        }
+        
+        // Only show available products
+        query.available = true;
+        
+        let products = await Product.find(query).limit(parseInt(limit));
+        
+        // Apply sorting
+        if (sort) {
+            switch (sort) {
+                case 'price-low-high':
+                    products.sort((a, b) => a.new_price - b.new_price);
+                    break;
+                case 'price-high-low':
+                    products.sort((a, b) => b.new_price - a.new_price);
+                    break;
+                case 'name-a-z':
+                    products.sort((a, b) => a.name.localeCompare(b.name));
+                    break;
+                case 'name-z-a':
+                    products.sort((a, b) => b.name.localeCompare(a.name));
+                    break;
+                case 'newest':
+                    products.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    break;
+                case 'oldest':
+                    products.sort((a, b) => new Date(a.date) - new Date(b.date));
+                    break;
+            }
+        }
+        
+        res.json({
+            success: true,
+            products: products,
+            count: products.length
+        });
+        
+    } catch (error) {
+        console.error('Search error:', error);
+        res.json({
+            success: false,
+            error: 'Search failed'
+        });
+    }
+});
+
+// API for product suggestions (autocomplete)
+app.get('/suggestions', async (req, res) => {
+    try {
+        const { q } = req.query;
+        
+        if (!q || q.length < 2) {
+            return res.json({ suggestions: [] });
+        }
+        
+        const products = await Product.find({
+            $and: [
+                { available: true },
+                {
+                    $or: [
+                        { name: { $regex: q, $options: 'i' } },
+                        { category: { $regex: q, $options: 'i' } }
+                    ]
+                }
+            ]
+        }).limit(5).select('name category');
+        
+        // Extract unique suggestions
+        const suggestions = [];
+        const seen = new Set();
+        
+        products.forEach(product => {
+            if (!seen.has(product.name)) {
+                suggestions.push({
+                    text: product.name,
+                    type: 'product'
+                });
+                seen.add(product.name);
+            }
+        });
+        
+        // Add category suggestions
+        const categories = ['men', 'women', 'kids'];
+        categories.forEach(cat => {
+            if (cat.toLowerCase().includes(q.toLowerCase()) && !seen.has(cat)) {
+                suggestions.push({
+                    text: cat,
+                    type: 'category'
+                });
+                seen.add(cat);
+            }
+        });
+        
+        res.json({ suggestions: suggestions.slice(0, 5) });
+        
+    } catch (error) {
+        console.error('Suggestions error:', error);
+        res.json({ suggestions: [] });
+    }
+});
 
 //Endpoint for new collection
 
