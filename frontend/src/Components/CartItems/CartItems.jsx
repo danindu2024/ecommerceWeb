@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import './CartItems.css';
 import { ShopContext } from '../../Context/ShopContext';
 import remove_icon from '../Asserts/cart_cross_icon.png';
@@ -16,6 +16,22 @@ const CartItems = () => {
   } = useContext(ShopContext);
 
   const { isAuthenticated } = useAuth0();
+  const [paypalClientId, setPaypalClientId] = useState('');
+  const [isPaypalLoading, setIsPaypalLoading] = useState(true);
+
+  // Fetch PayPal client ID from backend
+  useEffect(() => {
+    fetch('http://localhost:4000/config/paypal')
+      .then(res => res.json())
+      .then(data => {
+        setPaypalClientId(data.clientId);
+        setIsPaypalLoading(false);
+      })
+      .catch(err => {
+        console.error('Error fetching PayPal config:', err);
+        setIsPaypalLoading(false);
+      });
+  }, []);
 
   if (!isCartLoaded) {
     return (
@@ -27,8 +43,14 @@ const CartItems = () => {
 
   const hasItemsInCart = Object.values(cartItems).some(q => q > 0);
 
-  // Convert amount to USD for PayPal (example conversion)
+  // Convert LKR to USD for PayPal (approximate rate: 1 USD = 350 LKR)
   const totalUSD = (getTotalCartAmount() / 350).toFixed(2);
+
+  const paypalInitialOptions = {
+    "client-id": paypalClientId,
+    currency: "USD",
+    intent: "capture"
+  };
 
   return (
     <div className='cartItems'>
@@ -127,36 +149,82 @@ const CartItems = () => {
                   <h3>Total</h3>
                   <h3>Rs. {getTotalCartAmount()}</h3>
                 </div>
+                <div className="cartItems-total-item">
+                  <p><small>PayPal Total (USD)</small></p>
+                  <p><small>${totalUSD}</small></p>
+                </div>
               </div>
 
-              {/* ------------------- PayPal Buttons ------------------- */}
-              <PayPalScriptProvider options={{ "client-id": `${process.env.PAYPAL_CLIENT_ID}`, currency: "LKR" }}>
-                <PayPalButtons
-                  style={{ layout: 'vertical', color: 'blue', shape: 'rect', label: 'pay' }}
-                  createOrder={async (data, actions) => {
-                    const res = await fetch('http://localhost:4000/paypal/create-order', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ amount: totalUSD })
-                    });
-                    const orderData = await res.json();
-                    return orderData.id;
-                  }}
-                  onApprove={async (data, actions) => {
-                    const res = await fetch(`http://localhost:4000/paypal/capture-order/${data.orderID}`, {
-                      method: 'POST',
-                    });
-                    const captureData = await res.json();
-                    console.log('Payment successful:', captureData);
-                    alert('Payment Successful!');
-                    clearUserCart(); // Clear cart after payment
-                  }}
-                  onError={(err) => {
-                    console.error(err);
-                    alert('Payment failed. Try again!');
-                  }}
-                />
-              </PayPalScriptProvider>
+              {/* PayPal Buttons */}
+              {isPaypalLoading ? (
+                <div>Loading PayPal...</div>
+              ) : paypalClientId ? (
+                <PayPalScriptProvider options={paypalInitialOptions}>
+                  <PayPalButtons
+                    style={{ 
+                      layout: 'vertical', 
+                      color: 'blue', 
+                      shape: 'rect', 
+                      label: 'pay',
+                      height: 40
+                    }}
+                    createOrder={async (data, actions) => {
+                      try {
+                        const response = await fetch('http://localhost:4000/paypal/create-order', {
+                          method: 'POST',
+                          headers: { 
+                            'Content-Type': 'application/json' 
+                          },
+                          body: JSON.stringify({ 
+                            amount: totalUSD 
+                          })
+                        });
+                        
+                        const orderData = await response.json();
+                        
+                        if (!response.ok) {
+                          throw new Error(orderData.error || 'Failed to create order');
+                        }
+                        
+                        return orderData.id;
+                      } catch (error) {
+                        console.error('Error creating PayPal order:', error);
+                        throw error;
+                      }
+                    }}
+                    onApprove={async (data, actions) => {
+                      try {
+                        const response = await fetch(`http://localhost:4000/paypal/capture-order/${data.orderID}`, {
+                          method: 'POST',
+                        });
+                        
+                        const captureData = await response.json();
+                        
+                        if (!response.ok) {
+                          throw new Error(captureData.error || 'Failed to capture payment');
+                        }
+                        
+                        console.log('Payment successful:', captureData);
+                        alert('Payment Successful! Thank you for your purchase.');
+                        clearUserCart(); // Clear cart after successful payment
+                      } catch (error) {
+                        console.error('Error capturing payment:', error);
+                        alert('Payment processing failed. Please try again.');
+                      }
+                    }}
+                    onError={(err) => {
+                      console.error('PayPal error:', err);
+                      alert('PayPal error occurred. Please try again.');
+                    }}
+                    onCancel={(data) => {
+                      console.log('Payment cancelled:', data);
+                      alert('Payment was cancelled.');
+                    }}
+                  />
+                </PayPalScriptProvider>
+              ) : (
+                <div>PayPal configuration error. Please contact support.</div>
+              )}
             </div>
 
             <div className="cartItems-promocode">

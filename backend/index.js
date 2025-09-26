@@ -8,8 +8,14 @@ const path = require('path')
 const cors = require('cors');
 const { type } = require('os');
 
+// Load environment variables
+require('dotenv').config();
+
 app.use(express.json())
 app.use(cors())
+
+// Import PayPal routes
+const paypalRoutes = require('./routes/paypal');
 
 // Database Connection with MongoDB
 mongoose.connect("mongodb+srv://danindu:daninduPass@cluster0.pqlevkt.mongodb.net/e-commerce")
@@ -19,6 +25,16 @@ mongoose.connect("mongodb+srv://danindu:daninduPass@cluster0.pqlevkt.mongodb.net
 app.get("/", (req, res)=> {
     res.send("Express App is Running")
 })
+
+// Use PayPal routes
+app.use('/paypal', paypalRoutes);
+
+// Add endpoint to get PayPal client ID for frontend
+app.get('/config/paypal', (req, res) => {
+    res.json({
+        clientId: process.env.PAYPAL_CLIENT_ID
+    });
+});
 
 // Image Storage Engine
 

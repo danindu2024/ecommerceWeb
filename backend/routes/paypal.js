@@ -1,9 +1,4 @@
-
-import express from 'express';
-import fetch from 'node-fetch';
-import dotenv from 'dotenv';
-dotenv.config();
-
+const express = require('express');
 const router = express.Router();
 
 // Create PayPal order
@@ -12,7 +7,7 @@ router.post('/create-order', async (req, res) => {
 
   try {
     // Get access token
-    const auth = await fetch(`https://api-m.sandbox.paypal.com/v1/oauth2/token`, {
+    const authResponse = await fetch(`https://api-m.sandbox.paypal.com/v1/oauth2/token`, {
       method: 'POST',
       headers: {
         'Authorization': `Basic ${Buffer.from(`${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_SECRET}`).toString('base64')}`,
@@ -21,10 +16,15 @@ router.post('/create-order', async (req, res) => {
       body: 'grant_type=client_credentials'
     });
 
-    const authData = await auth.json();
+    const authData = await authResponse.json();
+
+    if (!authResponse.ok) {
+      console.error('PayPal auth error:', authData);
+      return res.status(500).json({ error: 'PayPal authentication failed' });
+    }
 
     // Create order
-    const order = await fetch(`https://api-m.sandbox.paypal.com/v2/checkout/orders`, {
+    const orderResponse = await fetch(`https://api-m.sandbox.paypal.com/v2/checkout/orders`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -32,15 +32,30 @@ router.post('/create-order', async (req, res) => {
       },
       body: JSON.stringify({
         intent: "CAPTURE",
-        purchase_units: [{ amount: { currency_code: "USD", value: amount } }]
+        purchase_units: [{
+          amount: {
+            currency_code: "USD", // Use USD for sandbox
+            value: amount.toString()
+          }
+        }],
+        application_context: {
+          return_url: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/success`,
+          cancel_url: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/cancel`
+        }
       })
     });
 
-    const orderData = await order.json();
+    const orderData = await orderResponse.json();
+
+    if (!orderResponse.ok) {
+      console.error('PayPal order creation error:', orderData);
+      return res.status(500).json({ error: 'Failed to create PayPal order' });
+    }
+
     res.json(orderData);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Error creating PayPal order");
+  } catch (error) {
+    console.error('PayPal create order error:', error);
+    res.status(500).json({ error: "Error creating PayPal order" });
   }
 });
 
@@ -49,7 +64,8 @@ router.post('/capture-order/:orderID', async (req, res) => {
   const { orderID } = req.params;
 
   try {
-    const auth = await fetch(`https://api-m.sandbox.paypal.com/v1/oauth2/token`, {
+    // Get access token
+    const authResponse = await fetch(`https://api-m.sandbox.paypal.com/v1/oauth2/token`, {
       method: 'POST',
       headers: {
         'Authorization': `Basic ${Buffer.from(`${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_SECRET}`).toString('base64')}`,
@@ -58,9 +74,15 @@ router.post('/capture-order/:orderID', async (req, res) => {
       body: 'grant_type=client_credentials'
     });
 
-    const authData = await auth.json();
+    const authData = await authResponse.json();
 
-    const capture = await fetch(`https://api-m.sandbox.paypal.com/v2/checkout/orders/${orderID}/capture`, {
+    if (!authResponse.ok) {
+      console.error('PayPal auth error:', authData);
+      return res.status(500).json({ error: 'PayPal authentication failed' });
+    }
+
+    // Capture payment
+    const captureResponse = await fetch(`https://api-m.sandbox.paypal.com/v2/checkout/orders/${orderID}/capture`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -68,12 +90,18 @@ router.post('/capture-order/:orderID', async (req, res) => {
       }
     });
 
-    const captureData = await capture.json();
+    const captureData = await captureResponse.json();
+
+    if (!captureResponse.ok) {
+      console.error('PayPal capture error:', captureData);
+      return res.status(500).json({ error: 'Failed to capture PayPal payment' });
+    }
+
     res.json(captureData);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Error capturing PayPal order");
+  } catch (error) {
+    console.error('PayPal capture error:', error);
+    res.status(500).json({ error: "Error capturing PayPal payment" });
   }
 });
 
-export default router;
+module.exports = router;
