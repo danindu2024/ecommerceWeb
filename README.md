@@ -315,31 +315,5 @@ npm run build
 4. **CORS Issues**
    - Verify backend CORS configuration
    - Check frontend API URL configuration
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/new-feature`)
-3. Commit your changes (`git commit -am 'Add new feature'`)
-4. Push to the branch (`git push origin feature/new-feature`)
-5. Create a Pull Request
-
-## 📄 License
-
-This project is licensed under the ISC License.
-
-## 👥 Team
-
-- **Developer**: [Your Name]
-- **Assignment**: E-Commerce Website Development
-- **Course**: [Course Name]
-
-## 📞 Support
-
-For any questions or issues, please contact:
-- Email: [your-email@example.com]
-- GitHub: [your-github-username]
-
----
-
-**Note**: This project was developed as part of Assignment 3 - E-Commerce Website Development, meeting all core requirements and implementing bonus features including authentication and payment integration.
+  
+## Thank You
